@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Daftar Gaji Karyawan</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ================= HALAMAN LOGIN ================= -->
+  <main class="login" id="login" hidden>
+    <section class="login-intro">
+      <div class="brand">
+        <div class="brand-mark">G</div>
+        <div>
+          <strong>GajiKu</strong>
+          <span>Penggajian karyawan</span>
+        </div>
+      </div>
+      <div class="login-copy">
+        <h1>Gaji, tunjangan, dan gaji bersih setiap karyawan dalam satu tempat.</h1>
+        <p>Masuk dengan akun yang diberikan admin untuk melihat daftar gaji.</p>
+      </div>
+    </section>
+
+    <section class="login-box">
+      <form id="loginForm">
+        <h2>Masuk</h2>
+
+        <label>Username
+          <input type="text" id="lUser" autocomplete="username" required autofocus>
+        </label>
+
+        <label>Password
+          <div class="pw">
+            <input type="password" id="lPass" autocomplete="current-password" required>
+            <button type="button" class="pw-toggle" data-target="lPass">Tampilkan</button>
+          </div>
+        </label>
+
+        <p class="form-msg" id="loginMsg" role="alert"></p>
+        <button type="submit" class="btn btn-primary btn-block">Masuk</button>
+      </form>
+    </section>
+  </main>
+
+  <!-- ================= APLIKASI ================= -->
+  <div class="app" id="app" hidden>
+
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <div class="brand-mark">G</div>
+        <div>
+          <strong>GajiKu</strong>
+          <span>Penggajian karyawan</span>
+        </div>
+      </div>
+
+      <nav class="nav">
+        <button class="nav-item active" data-view="dashboard">
+          <svg viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
+          Dashboard
+        </button>
+        <button class="nav-item" data-view="karyawan">
+          <svg viewBox="0 0 24 24"><path d="M16 11c1.7 0 3-1.3 3-3s-1.3-3-3-3-3 1.3-3 3 1.3 3 3 3zm-8 0c1.7 0 3-1.3 3-3S9.7 5 8 5 5 6.3 5 8s1.3 3 3 3zm0 2c-2.3 0-7 1.2-7 3.5V19h14v-2.5C15 14.2 10.3 13 8 13zm8 0c-.3 0-.6 0-1 .1 1.2.8 2 2 2 3.4V19h6v-2.5c0-2.3-4.7-3.5-7-3.5z"/></svg>
+          Data Karyawan
+        </button>
+        <button class="nav-item admin-only" data-view="pengguna">
+          <svg viewBox="0 0 24 24"><path d="M12 1 3 5v6c0 5.5 3.8 10.7 9 12 5.2-1.3 9-6.5 9-12V5l-9-4zm0 11h7c-.5 4-3.2 7.5-7 8.9V12H5V6.3l7-3.1V12z"/></svg>
+          Kelola Pengguna
+        </button>
+        <button class="nav-item" data-view="aturan">
+          <svg viewBox="0 0 24 24"><path d="M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+          Aturan Gaji
+        </button>
+      </nav>
+
+      <div class="sidebar-foot">
+        <div class="me">
+          <div class="me-avatar" id="meAvatar">A</div>
+          <div>
+            <strong id="meNama">-</strong>
+            <span id="meRole">-</span>
+          </div>
+        </div>
+        <button class="btn-ghost" id="btnGantiPw">Ganti password</button>
+        <button class="btn-ghost admin-only" id="btnReset">Kembalikan data contoh</button>
+        <button class="btn-ghost btn-logout" id="btnLogout">Keluar</button>
+      </div>
+    </aside>
+
+    <div class="main">
+      <header class="topbar">
+        <button class="menu-btn" id="menuBtn" aria-label="Buka menu">
+          <svg viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+        </button>
+        <div>
+          <h1 id="pageTitle">Dashboard</h1>
+          <p id="pageDate"></p>
+        </div>
+      </header>
+
+      <!-- ===== DASHBOARD ===== -->
+      <section class="view active" id="view-dashboard">
+
+        <div class="hero">
+          <div>
+            <span class="hero-label">Total gaji bersih yang dibayarkan per bulan</span>
+            <div class="hero-number" id="statTotal">Rp 0</div>
+          </div>
+          <div class="hero-side">
+            <div><span>Karyawan</span><strong id="statJumlah">0</strong></div>
+            <div><span>Rata-rata gaji</span><strong id="statRata">Rp 0</strong></div>
+            <div><span>Gaji tertinggi</span><strong id="statMax">Rp 0</strong></div>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="panel">
+            <h2>Komposisi total gaji</h2>
+            <div class="donut-wrap">
+              <div class="donut" id="donut"><div class="donut-hole"><span>Total</span><strong id="donutCenter">0</strong></div></div>
+              <ul class="legend" id="legend"></ul>
+            </div>
+          </div>
+
+          <div class="panel">
+            <h2>Karyawan per pendidikan</h2>
+            <div class="bars" id="barsPendidikan"></div>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="panel">
+            <h2>Karyawan per kelompok masa kerja</h2>
+            <div class="bars" id="barsMasa"></div>
+          </div>
+
+          <div class="panel">
+            <h2>5 gaji bersih tertinggi</h2>
+            <ol class="top-list" id="topList"></ol>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== DATA KARYAWAN ===== -->
+      <section class="view" id="view-karyawan">
+        <div class="toolbar">
+          <input type="search" id="cari" placeholder="Cari nama karyawan">
+          <select id="filterPendidikan">
+            <option value="">Semua pendidikan</option>
+            <option>SD</option>
+            <option>SMP</option>
+            <option>SMA/SMK</option>
+            <option>S1</option>
+            <option>S2</option>
+          </select>
+          <div class="spacer"></div>
+          <button class="btn" id="btnExport">Unduh CSV</button>
+          <button class="btn" id="btnPrint">Cetak</button>
+          <button class="btn btn-primary admin-only" id="btnTambah">Tambah karyawan</button>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>No</th>
+                <th>Nama</th>
+                <th>Pendidikan</th>
+                <th class="num">Masa kerja</th>
+                <th class="num">Anak</th>
+                <th class="num">Gaji pokok</th>
+                <th class="num">Tunj. masa kerja</th>
+                <th class="num">Tunj. anak</th>
+                <th class="num">Freeme 3%</th>
+                <th class="num">PPL 3%</th>
+                <th class="num">Gaji bersih</th>
+                <th class="admin-only"></th>
+              </tr>
+            </thead>
+            <tbody id="tbody"></tbody>
+            <tfoot id="tfoot"></tfoot>
+          </table>
+          <div class="empty" id="empty" hidden>Belum ada data karyawan.</div>
+        </div>
+      </section>
+
+      <!-- ===== KELOLA PENGGUNA ===== -->
+      <section class="view" id="view-pengguna">
+        <div class="toolbar">
+          <p class="hint">Admin bisa mengelola data karyawan dan pengguna. Staf hanya bisa melihat data.</p>
+          <div class="spacer"></div>
+          <button class="btn btn-primary" id="btnTambahUser">Tambah pengguna</button>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Username</th>
+                <th>Nama lengkap</th>
+                <th>Peran</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="tbodyUser"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ===== ATURAN ===== -->
+      <section class="view" id="view-aturan">
+        <div class="grid-2">
+          <div class="panel">
+            <h2>Gaji pokok berdasarkan masa kerja</h2>
+            <table class="mini">
+              <tr><td>5 – 10 tahun</td><td class="num">Rp 3.000.000</td></tr>
+              <tr><td>11 – 15 tahun</td><td class="num">Rp 4.500.000</td></tr>
+              <tr><td>16 – 32 tahun</td><td class="num">Rp 6.000.000</td></tr>
+            </table>
+          </div>
+          <div class="panel">
+            <h2>Tunjangan</h2>
+            <table class="mini">
+              <tr><td>Masa kerja 15 tahun ke atas</td><td class="num">Rp 300.000</td></tr>
+              <tr><td>Masa kerja di bawah 15 tahun</td><td class="num">Rp 150.000</td></tr>
+              <tr><td>Anak 3 atau lebih</td><td class="num">7% gaji pokok</td></tr>
+              <tr><td>Freeme (semua karyawan)</td><td class="num">3% gaji pokok</td></tr>
+              <tr><td>PPL (semua karyawan)</td><td class="num">3% gaji pokok</td></tr>
+            </table>
+          </div>
+        </div>
+        <div class="panel formula">
+          <h2>Rumus gaji bersih</h2>
+          <p>Gaji bersih = gaji pokok + tunjangan masa kerja + tunjangan anak + freeme + PPL</p>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <!-- ================= DIALOG KARYAWAN ================= -->
+  <dialog id="dialog">
+    <form id="form" method="dialog">
+      <h2 id="dialogTitle">Tambah karyawan</h2>
+
+      <label>Nama karyawan
+        <input type="text" id="fNama" required maxlength="60" autocomplete="off">
+      </label>
+
+      <label>Pendidikan terakhir
+        <select id="fPendidikan" required>
+          <option value="">Pilih pendidikan</option>
+          <option>SD</option>
+          <option>SMP</option>
+          <option>SMA/SMK</option>
+          <option>S1</option>
+          <option>S2</option>
+        </select>
+      </label>
+
+      <div class="row">
+        <label>Lama bekerja (tahun)
+          <input type="number" id="fMasa" required min="5" max="32" step="1">
+        </label>
+        <label>Jumlah anak
+          <input type="number" id="fAnak" required min="0" max="20" step="1" value="0">
+        </label>
+      </div>
+
+      <div class="preview" id="preview">Isi lama bekerja untuk melihat perkiraan gaji bersih.</div>
+
+      <div class="dialog-actions">
+        <button type="button" class="btn" data-tutup="dialog">Batal</button>
+        <button type="submit" class="btn btn-primary">Simpan</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- ================= DIALOG PENGGUNA ================= -->
+  <dialog id="dialogUser">
+    <form id="formUser" method="dialog">
+      <h2 id="userTitle">Tambah pengguna</h2>
+
+      <label>Username
+        <input type="text" id="uUser" required minlength="3" maxlength="20" autocomplete="off" placeholder="huruf kecil, angka, titik, atau garis bawah">
+      </label>
+
+      <label>Nama lengkap
+        <input type="text" id="uNama" required maxlength="60" autocomplete="off">
+      </label>
+
+      <label>Peran
+        <select id="uRole">
+          <option value="admin">Admin (kelola data dan pengguna)</option>
+          <option value="staf">Staf (hanya melihat data)</option>
+        </select>
+      </label>
+
+      <label><span id="uPassLabel">Password</span>
+        <div class="pw">
+          <input type="password" id="uPass" minlength="6" autocomplete="new-password">
+          <button type="button" class="pw-toggle" data-target="uPass">Tampilkan</button>
+        </div>
+      </label>
+
+      <p class="form-msg" id="userMsg" role="alert"></p>
+
+      <div class="dialog-actions">
+        <button type="button" class="btn" data-tutup="dialogUser">Batal</button>
+        <button type="submit" class="btn btn-primary">Simpan</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- ================= DIALOG GANTI PASSWORD ================= -->
+  <dialog id="dialogPw">
+    <form id="formPw" method="dialog">
+      <h2>Ganti password</h2>
+
+      <label>Password lama
+        <input type="password" id="pLama" required autocomplete="current-password">
+      </label>
+      <label>Password baru
+        <input type="password" id="pBaru" required minlength="6" autocomplete="new-password">
+      </label>
+      <label>Ulangi password baru
+        <input type="password" id="pUlang" required minlength="6" autocomplete="new-password">
+      </label>
+
+      <p class="form-msg" id="pwMsg" role="alert"></p>
+
+      <div class="dialog-actions">
+        <button type="button" class="btn" data-tutup="dialogPw">Batal</button>
+        <button type="submit" class="btn btn-primary">Simpan password</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div class="toast" id="toast" role="status"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
